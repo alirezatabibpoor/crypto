@@ -1,0 +1,81 @@
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+using Newtonsoft.Json;
+
+
+
+
+
+public class Program
+{
+    private static async Task Main(string[] args)
+    {
+        HttpClient client = new HttpClient();
+        string str = "https://api.kucoin.com/api/v1/market/stats?symbol=BTC-USDT";
+        HttpResponseMessage res = await  client.GetAsync(str);
+        if(res.IsSuccessStatusCode)
+        {
+            string apires = await res.Content.ReadAsStringAsync();
+            Console.WriteLine(apires);
+            Console.WriteLine();
+            apiwrapper wrapper = new apiwrapper();
+             wrapper = JsonConvert.DeserializeObject<apiwrapper>(apires);
+            List<data > list = wrapper.datas.ToList();
+            
+            foreach(var  data in list)
+            {
+                Console.WriteLine($"code:{data.code}");
+                Console.WriteLine($"buy:{data.buy}");
+                Console.WriteLine($"sell:{data.sell}");
+                Console.WriteLine($"symbol{data.symbol}");
+                er e = new er();
+                e.add(data.buy);
+                e.add(data.sell);
+            }
+           
+        }
+        
+    }
+}
+public class apiwrapper :data
+{
+   public List<data> datas = new List<data>();
+
+    public apiwrapper() { 
+        datas = new List<data>();
+        datas.Add(new data());
+        
+    }
+
+
+}
+ ;public class er
+{
+    public int  add(int i )
+    {
+        
+        return ((i) * 54/100);
+        return ((i) * 78 / 100000);
+
+       
+    }
+}
+    
+     
+
+    public class data
+{
+    
+       public   string code { get; set; }
+    public int buy { get; set; } 
+    public int  sell  { get; set; }
+    public string symbol { get; set; }  
+     
+        
+
+    }
+    
